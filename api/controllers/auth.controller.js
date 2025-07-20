@@ -18,6 +18,21 @@ export const signup = async (req, res, next) => {
 export const signin = async (req, res, next) => {
   const { email, password } = req.body;
   try {
+    // ✅ Hardcoded admin login
+    if (email === 'vasukapahi16@gmail.com' && password === '16062004') {
+      const token = jwt.sign({ id: 'admin-id', isAdmin: true }, process.env.JWT_SECRET);
+      return res
+        .cookie('access_token', token, { httpOnly: true })
+        .status(200)
+        .json({
+          _id: 'admin-id',
+          username: 'Admin',
+          email: 'vasukapahi16@gmail.com',
+          isAdmin: true,
+        });
+    }
+
+    // 🔐 Regular user login
     const validUser = await User.findOne({ email });
     if (!validUser) return next(errorHandler(404, 'User not found!'));
     const validPassword = bcryptjs.compareSync(password, validUser.password);
