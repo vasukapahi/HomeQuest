@@ -9,7 +9,6 @@ export const sendInvoice = async (req, res, next) => {
     const user = await User.findById(userId);
     if (!user) return res.status(404).json({ message: 'User not found' });
 
-    // 1. Generate HTML content
     const htmlContent = `
       <html>
         <body>
@@ -23,19 +22,17 @@ export const sendInvoice = async (req, res, next) => {
       </html>
     `;
 
-    // 2. Generate PDF using Puppeteer
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
     await page.setContent(htmlContent);
     const pdfBuffer = await page.pdf({ format: 'A4' });
     await browser.close();
 
-    // 3. Send Email using Nodemailer
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: process.env.MAIL_USER,       // Your Gmail
-        pass: process.env.MAIL_PASS,       // App password
+        user: process.env.MAIL_USER,      
+        pass: process.env.MAIL_PASS,    
       },
     });
 
