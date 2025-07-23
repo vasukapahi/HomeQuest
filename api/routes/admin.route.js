@@ -10,6 +10,6 @@ import { verifyAdmin } from '../utils/verifyAdmin.js';
 const router = express.Router();
 
 router.get('/users', verifyToken, verifyAdmin, getAllUsers);
-router.put('/block/:id', verifyToken, verifyAdmin, toggleBlockUser);
+router.put('/block/:id', verifyToken, verifyAdmin);
 
 export default router;
